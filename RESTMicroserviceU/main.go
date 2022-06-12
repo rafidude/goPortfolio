@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type Customer struct {
@@ -14,12 +16,14 @@ type Customer struct {
 }
 
 func main() {
+	router := mux.NewRouter()
+
 	// Setting up routes
-	http.HandleFunc("/greet", greet)
-	http.HandleFunc("/customers", getCustomersJSON)
+	router.HandleFunc("/greet", greet)
+	router.HandleFunc("/customers", getCustomersJSON)
 
 	// Starting the server
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func greet(w http.ResponseWriter, r *http.Request) {

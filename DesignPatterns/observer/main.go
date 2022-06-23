@@ -1,67 +1,108 @@
-// Observer: it is the object that is interested in the subject
-// 	update
-// Subject: it is the object that is being observed.
-// 	state
-// 	publish
-// 	subscribe
-// 	notify
-
 package main
 
-import "fmt"
+import (
+	"errors"
+	"strconv"
+)
 
 func main() {
-	// create a new subject
-	subject := &Subject{state: "initial state"}
 
-	// create two new observers
-	o1 := Observer1{}
-	o2 := Observer2{}
-
-	// subscribe the observer to the subject
-	subject.Subscribe(&o1)
-	subject.Subscribe(&o2)
-
-	// publish the subject
-	subject.publish("Hello World")
-	subject.publish("Have a good day!")
-}
-
-type Observer interface {
-	// update is the method that will be called when the subject publishes a new state
-	update(string)
-}
-
-// Observers implement the Observer interface which is update func.
-type Observer1 struct{}
-
-func (o *Observer1) update(state string) {
-	fmt.Println("Observer1:", state)
-}
-
-type Observer2 struct{}
-
-func (o *Observer2) update(state string) {
-	fmt.Println("Observer2:", state)
-}
-
-type Subject struct {
-	observers []Observer
-	state     string
-}
-
-func (s *Subject) notify(msg string) {
-	s.state = msg
-	for _, observer := range s.observers {
-		observer.update(msg)
+	// Create a new stockMonitor object
+	stockMonitor := &StockMonitor{
+		ticker: "AAPL",
+		price:  100.0,
 	}
+
+	observerA := &StockObserver{
+		name: "A",
+	}
+	observerB := &StockObserver{
+		name: "B",
+	}
+
+	// Subscribe our Observers to the stockMonitor
+	stockMonitor.Subscribe(observerA)
+	stockMonitor.Subscribe(observerB)
+
+	// Start the stockMonitor
+	stockMonitor.Notify()
+
+	// Change the price of the stockMonitor
+	stockMonitor.SetPrice(500)
+
+	// Unsubscribe an Observer from the stockMonitor
+	stockMonitor.Unsubscribe(observerA)
+
+	// Change the price of the stockMonitor
+	stockMonitor.SetPrice(528)
 }
 
-func (s *Subject) publish(msg string) {
-	s.state = msg
-	s.notify(msg)
+// Subject interface
+type Subject interface {
+	Subscribe(o Observer) (bool, error)
+	Unsubscribe(o Observer) (bool, error)
+	Notify() (bool, error)
 }
 
-func (s *Subject) Subscribe(observer Observer) {
-	s.observers = append(s.observers, observer)
+// Observer Interface
+type Observer interface {
+	Update(string)
+}
+
+// Concrete Observer: StockObserver
+type StockObserver struct {
+	name string
+}
+
+func (s *StockObserver) Update(t string) {
+	// do something
+	println("StockObserver:", s.name, "updated,", "received:", t)
+}
+
+// Concrete Subject: stockMonitor
+type StockMonitor struct {
+	// internal state
+	ticker string
+	price  float64
+
+	observers []Observer
+}
+
+func (s *StockMonitor) Subscribe(o Observer) (bool, error) {
+
+	for _, observer := range s.observers {
+		if observer == o {
+			return false, errors.New("Observer already exists")
+		}
+	}
+	s.observers = append(s.observers, o)
+	return true, nil
+}
+
+func (s *StockMonitor) Unsubscribe(o Observer) (bool, error) {
+
+	for i, observer := range s.observers {
+		if observer == o {
+			s.observers = append(s.observers[:i], s.observers[i+1:]...)
+			return true, nil
+		}
+	}
+	return false, errors.New("Observer not found")
+}
+
+func (s *StockMonitor) Notify() (bool, error) {
+	for _, observer := range s.observers {
+		observer.Update(s.String())
+	}
+	return true, nil
+}
+
+func (s *StockMonitor) SetPrice(price float64) {
+	s.price = price
+	s.Notify()
+}
+
+func (s *StockMonitor) String() string {
+	convertFloatToString := strconv.FormatFloat(s.price, 'f', 2, 64)
+	return "StockMonitor: " + s.ticker + " $" + convertFloatToString
 }

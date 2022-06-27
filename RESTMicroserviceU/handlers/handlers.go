@@ -5,6 +5,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type Customer struct {
@@ -40,4 +42,11 @@ func GetCustomers(w http.ResponseWriter, r *http.Request) {
 	} else {
 		getCustomersJSON(w, r)
 	}
+}
+
+//get a single customer
+func GetCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["customer_id"]
+	fmt.Fprintf(w, "Customer ID is: %s\n", id)
 }

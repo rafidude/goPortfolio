@@ -10,12 +10,11 @@ import (
 // to set the price per hour and calculate
 // the total monthly and yearly prices
 func main() {
+	pricePerHour := 1.25
 	args := os.Args[1:]
-	var pricePerHour float64
-	// convert args[0] to float64
-	pricePerHour, err := strconv.ParseFloat(args[0], 64)
-	if err != nil {
-		pricePerHour = 1.25
+	// if the command line has prince per hour information, use it
+	if len(args) > 0 {
+		pricePerHour, _ = strconv.ParseFloat(args[0], 64)
 	}
 	fmt.Printf("pricePerHour: %f\n", pricePerHour)
 	// Calculate number of hours in a month and year
@@ -26,4 +25,12 @@ func main() {
 	totalYearlyPrice := float64(hoursInYear) * pricePerHour
 	fmt.Printf("Total monthly price: %.2f\n", totalMonthlyPrice)
 	fmt.Printf("Total yearly price: %.2f\n", totalYearlyPrice)
+	sammy := map[string]string{"name": "Sammy",
+		"animal": "shark", "color": "blue"}
+	delete(sammy, "color")
+	// loop through the map
+	for key, value := range sammy {
+		fmt.Printf("%s: %s\n", key, value)
+	}
+
 }

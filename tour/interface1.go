@@ -8,11 +8,11 @@ type T struct {
 	S string
 }
 
-func (t *T) M() {
+func (t T) M() {
 	println(t.S)
 }
 
 func main() {
-	var i I = &T{"Hello"}
+	var i I = T{"Hello"}
 	i.M()
 }

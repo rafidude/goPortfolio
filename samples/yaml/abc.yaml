@@ -1,0 +1,9 @@
+# This is a comment
+Drinks:
+    - Smoothie:
+          Calories: 80
+          Price: 5
+Meals:
+    - CurdRice:
+          Calories: 200
+          Price: 2

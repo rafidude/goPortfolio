@@ -2,6 +2,19 @@ package shapes
 
 import "math"
 
+type Shape interface {
+	Area() float64
+	Perimeter() float64
+}
+
+func Perimeter(s Shape) float64 {
+	return s.Perimeter()
+}
+
+func Area(s Shape) float64 {
+	return s.Area()
+}
+
 type Rectangle struct {
 	Width  float64
 	Height float64

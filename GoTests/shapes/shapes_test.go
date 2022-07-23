@@ -36,3 +36,27 @@ func TestArea(t *testing.T) {
 	c := Circle{10.0}
 	area(c, 314.1592, t)
 }
+
+func TestAreaPerimeter(t *testing.T) {
+	areaTests := []struct {
+		shape     Shape
+		area      float64
+		perimeter float64
+	}{
+		{Rectangle{12, 6}, 72.0, 36.0},
+		{Circle{10}, 314.1592, 62.8318},
+		{Triangle{12, 6}, 36.0, 31.4164},
+	}
+
+	for _, tt := range areaTests {
+		got := tt.shape.Area()
+		if math.Abs(got-tt.area) > delta {
+			t.Errorf("Area got %g want %g", got, tt.area)
+		}
+		got2 := tt.shape.Perimeter()
+		if math.Abs(got2-tt.perimeter) > delta {
+			t.Errorf("Perimeter got %g want %g", got2, tt.perimeter)
+		}
+	}
+
+}

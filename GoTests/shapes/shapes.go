@@ -24,6 +24,20 @@ type Circle struct {
 	Radius float64
 }
 
+type Triangle struct {
+	Base   float64
+	Height float64
+}
+
+func (t Triangle) Perimeter() float64 {
+	return t.Base + t.Height +
+		math.Sqrt(t.Base*t.Base+t.Height*t.Height)
+}
+
+func (t Triangle) Area() float64 {
+	return t.Base * t.Height * 0.5
+}
+
 func (r Rectangle) Perimeter() float64 {
 	return 2 * (r.Width + r.Height)
 }

@@ -29,10 +29,20 @@ func measure(g geometry) {
 	fmt.Println(g.area())
 }
 
+type Body struct {
+	Msg interface{}
+}
+
 func main() {
 	r := rect{width: 3, height: 4}
 	c := circle{radius: 5}
 
 	measure(r)
 	measure(c)
+
+	b := Body{"Hello there"}
+	fmt.Printf("%#v %T\n", b.Msg, b.Msg)
+
+	b.Msg = 5
+	fmt.Printf("%#v %T\n", b.Msg, b.Msg)
 }

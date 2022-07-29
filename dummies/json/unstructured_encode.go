@@ -31,4 +31,15 @@ func main() {
 	} else {
 		fmt.Println(err)
 	}
+
+	var cust Customer
+	err = json.Unmarshal(johnJSON, &cust)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	var name Name = cust["Name"].(map[string]interface{})
+	fmt.Println(name["FirstName"], name["LastName"])
+	var address Address = cust["Address"].(map[string]interface{})
+	fmt.Println(address["Line1"], address["Line2"], address["Line3"])
 }
